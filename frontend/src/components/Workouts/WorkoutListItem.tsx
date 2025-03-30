@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { IWorkout } from '../../types';
-import { CSSProperties } from 'react';
 
 interface WorkoutListItemProps {
   workout: IWorkout;
@@ -51,15 +50,6 @@ const ClockIcon = () => (
 
 
 const WorkoutListItem: React.FC<WorkoutListItemProps> = ({ workout }) => {
-  const descriptionFadeStyle: CSSProperties = {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    height: '1.25rem', // h-5
-    background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)',
-    pointerEvents: 'none',
-  };
 
 
 

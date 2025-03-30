@@ -69,7 +69,6 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
   // Calculate which page buttons to show
   const getPageButtons = () => {
     const buttons = [];
-    const maxButtonsToShow = 5; // Adjust this to show more or fewer buttons
 
     // Always show first page
     buttons.push(1);

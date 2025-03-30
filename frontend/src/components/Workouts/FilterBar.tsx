@@ -1,4 +1,4 @@
-import React, { useState, useMemo, CSSProperties, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { allowedCategories, Category } from '../../types';
 
 interface FilterBarProps {
@@ -147,9 +147,20 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 </button>
                 
                 {isCategoryDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 z-50 p-3 w-fit">
-                    <div className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b border-gray-200">
-                      Filter by Category
+                  <div className="absolute top-full left-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 z-50 p-3" style={{ minWidth: '200px' }}>
+                    <div className="flex justify-between items-center gap-8 text-sm font-semibold text-gray-700 mb-3 pb-2 border-b border-gray-200">
+                      <span>Filter by Category</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsCategoryDropdownOpen(false);
+                        }}
+                        className="flex items-center justify-center w-5 h-5 rounded-full hover:bg-gray-100 transition-colors"
+                      >
+                        <svg className="w-3 h-3 text-gray-500" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9 3L3 9M3 3L9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
                     </div>
                     <div className="flex flex-col gap-1.5 whitespace-nowrap">
                       {allowedCategories.map(category => {

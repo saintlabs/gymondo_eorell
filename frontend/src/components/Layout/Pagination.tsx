@@ -1,5 +1,4 @@
-import React from 'react';
-import { CSSProperties } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface PaginationProps {
   currentPage: number;
@@ -9,8 +8,6 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-
-
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
@@ -18,6 +15,16 @@ const Pagination: React.FC<PaginationProps> = ({
   pageSize,
   onPageChange,
 }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Hide pagination if only one page or less
   if (totalWorkouts <= pageSize || totalPages <= 1) {
     return null;
@@ -42,6 +49,25 @@ const Pagination: React.FC<PaginationProps> = ({
 
   // Calculate which page buttons to show
   const getPageButtons = () => {
+    if (isMobile) {
+      const buttons = [];
+      
+      // Always show current page
+      buttons.push(currentPage);
+
+      // Show one button before current if available
+      if (currentPage > 1) {
+        buttons.unshift(currentPage - 1);
+      }
+
+      // Show one button after current if available
+      if (currentPage < totalPages) {
+        buttons.push(currentPage + 1);
+      }
+
+      return buttons;
+    }
+
     const buttons = [];
     const SIBLINGS = 1; // Number of siblings to show on each side
 
@@ -97,10 +123,19 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className="mt-6 flex flex-col items-center bg-white p-5 rounded-xl shadow-sm">
-      <div className="text-sm text-gray-600 text-center mb-4">
-        Showing <span className="font-medium text-gray-900">{startItem}</span> to{' '}
-        <span className="font-medium text-gray-900">{endItem}</span> of{' '}
-        <span className="font-medium text-gray-900">{totalWorkouts}</span> results
+      <div className={`text-sm text-gray-600 text-center ${isMobile ? 'mb-3' : 'mb-4'}`}>
+        {isMobile ? (
+          <span>
+            Page <span className="font-medium text-gray-900">{currentPage}</span> of{' '}
+            <span className="font-medium text-gray-900">{totalPages}</span>
+          </span>
+        ) : (
+          <span>
+            Showing <span className="font-medium text-gray-900">{startItem}</span> to{' '}
+            <span className="font-medium text-gray-900">{endItem}</span> of{' '}
+            <span className="font-medium text-gray-900">{totalWorkouts}</span> results
+          </span>
+        )}
       </div>
 
       <nav className="flex flex-wrap justify-center gap-2 mt-2" aria-label="Pagination">
@@ -189,4 +224,4 @@ const Pagination: React.FC<PaginationProps> = ({
   );
 };
 
-export default Pagination; 
+export default Pagination;

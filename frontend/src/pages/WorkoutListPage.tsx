@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, CSSProperties } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchWorkouts } from '../services/api';
 import { IWorkout, Category, FetchWorkoutsParams, ApiListResponse } from '../types';
@@ -6,9 +6,9 @@ import FilterBar from '../components/Workouts/FilterBar';
 import WorkoutListItem from '../components/Workouts/WorkoutListItem';
 import WorkoutTable from '../components/Workouts/WorkoutTable';
 import Pagination from '../components/Layout/Pagination';
-import WorkoutSkeletonLoader from '../components/Workouts/WorkoutSkeletonLoader';
+import WorkoutCardSkeletonLoader from '../components/Workouts/WorkoutCardSkeletonLoader';
+import WorkoutTableSkeletonLoader from '../components/Workouts/WorkoutTableSkeletonLoader';
 import ErrorMessage from '../components/Layout/ErrorMessage';
-
 
 
 const WorkoutListPage: React.FC = () => {
@@ -25,7 +25,7 @@ const WorkoutListPage: React.FC = () => {
     categories: searchParams.getAll('category') as Category[],
   };
   const [filters, setFilters] = useState<{ startDateMonthYear: string | null; categories: Category[] }>(initialFilters);
-  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>(searchParams.get('view') as 'grid' | 'table' || 'grid');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -39,6 +39,9 @@ const WorkoutListPage: React.FC = () => {
   const handleViewModeChange = (mode: 'grid' | 'table') => {
     if (!isMobile) {
       setViewMode(mode);
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('view', mode);
+      setSearchParams(newParams);
     }
   };
 
@@ -78,8 +81,12 @@ const WorkoutListPage: React.FC = () => {
     setFilters(newFilters);
     setCurrentPage(1); // Reset to page 1 when filters change
     
-    // Update URL parameters
-    const params = new URLSearchParams();
+    // Update URL parameters while preserving view mode
+    const params = new URLSearchParams(searchParams);
+    // Clear existing filter params
+    params.delete('month');
+    params.delete('category');
+    
     if (newFilters.startDateMonthYear) {
       params.set('month', newFilters.startDateMonthYear);
     }
@@ -93,7 +100,7 @@ const WorkoutListPage: React.FC = () => {
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     // Scroll to top when changing pages
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0 });
   };
 
   return (
@@ -110,11 +117,23 @@ const WorkoutListPage: React.FC = () => {
         </header>
 
         {isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[...Array(8)].map((_, index) => (
-              <WorkoutSkeletonLoader key={index} />
-            ))}
-          </div>
+          <>
+            {(viewMode === 'grid' || isMobile) ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[...Array(8)].map((_, index) => (
+                  <WorkoutCardSkeletonLoader key={index} />
+                ))}
+              </div>
+            ) : (
+              <table className="min-w-full divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {[...Array(20)].map((_, index) => (
+                    <WorkoutTableSkeletonLoader key={index} />
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </>
         )}
         {error && <ErrorMessage message={error} />}
 
@@ -122,7 +141,6 @@ const WorkoutListPage: React.FC = () => {
           <>
             {workouts.length > 0 ? (
               <>
-                
                 {(viewMode === 'grid' || isMobile) ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {workouts.map(workout => (
@@ -166,4 +184,4 @@ const WorkoutListPage: React.FC = () => {
   );
 };
 
-export default WorkoutListPage; 
+export default WorkoutListPage;

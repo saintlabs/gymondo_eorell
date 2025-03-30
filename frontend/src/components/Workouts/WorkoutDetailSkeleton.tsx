@@ -1,5 +1,3 @@
-import React from 'react';
-
 const WorkoutDetailSkeleton = () => {
   return (
     <div className="container max-w-5xl mx-auto px-4 pt-32">
