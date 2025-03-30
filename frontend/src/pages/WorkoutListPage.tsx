@@ -45,7 +45,6 @@ const WorkoutListPage: React.FC = () => {
     }
   };
 
-  // Memoize fetch data function
   const loadWorkouts = useCallback(async (page: number, currentFilters: typeof filters) => {
     setIsLoading(true);
     setError(null);
@@ -71,19 +70,15 @@ const WorkoutListPage: React.FC = () => {
     }
   }, [pageSize]);
 
-  // Effect to load data when page or filters change
   useEffect(() => {
     loadWorkouts(currentPage, filters);
   }, [currentPage, filters, loadWorkouts]);
 
-  // Handler for filter changes
   const handleFilterChange = useCallback((newFilters: { startDateMonthYear: string | null; categories: Category[] }) => {
     setFilters(newFilters);
-    setCurrentPage(1); // Reset to page 1 when filters change
+    setCurrentPage(1); 
     
-    // Update URL parameters while preserving view mode
     const params = new URLSearchParams(searchParams);
-    // Clear existing filter params
     params.delete('month');
     params.delete('category');
     
@@ -96,10 +91,8 @@ const WorkoutListPage: React.FC = () => {
     setSearchParams(params);
   }, [setSearchParams]);
 
-  // Handler for page changes
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
-    // Scroll to top when changing pages
     window.scrollTo({ top: 0 });
   };
 

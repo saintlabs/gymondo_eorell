@@ -5,7 +5,6 @@ import { IWorkout } from '../types';
 import WorkoutDetailSkeleton from '../components/Workouts/WorkoutDetailSkeleton';
 import ErrorMessage from '../components/Layout/ErrorMessage';
 
-// Helper to format date string
 const formatDate = (dateString: string | undefined): string => {
     if (!dateString) return 'N/A';
     try {

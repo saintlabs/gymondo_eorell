@@ -4,7 +4,6 @@ interface ErrorMessageProps {
   message: string;
 }
 
-// Styles are now handled by Tailwind utility classes
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
   <div className="bg-white border border-red-200 border-l-4 border-l-red-500 text-red-800 p-6 rounded-lg shadow-sm mb-6 flex items-center" role="alert">

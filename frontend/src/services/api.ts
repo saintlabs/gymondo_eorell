@@ -1,4 +1,3 @@
-// src/services/api.ts
 import axios from 'axios';
 import { IWorkout, FetchWorkoutsParams, ApiListResponse } from '../types';
 
@@ -13,15 +12,12 @@ const apiClient = axios.create({
 });
 
 export const fetchWorkouts = async (params: FetchWorkoutsParams = {}): Promise<ApiListResponse> => {
-  // Convert categories array to comma-separated string for query param
-  const queryParams = { ...params };
+  const queryParams: Record<string, any> = { ...params };
   if (params.categories && params.categories.length > 0) {
-    // @ts-ignore // Need to handle type difference if params.categories is defined
      queryParams.categories = params.categories.join(',');
   } else {
-     delete queryParams.categories; // Remove if empty
+     delete queryParams.categories; 
   }
-  // Remove nullish startDateMonthYear
   if (!params.startDateMonthYear) {
       delete queryParams.startDateMonthYear;
   }
@@ -35,4 +31,4 @@ export const fetchWorkoutById = async (id: string): Promise<IWorkout> => {
   return response.data;
 };
 
-export default apiClient; // Export if needed elsewhere 
+export default apiClient; 

@@ -61,37 +61,30 @@ const paginationStyles: Record<string, CSSProperties> = {
 };
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
-  // Don't render pagination if there's only one page
   if (totalPages <= 1) {
     return null;
   }
 
-  // Calculate which page buttons to show
   const getPageButtons = () => {
     const buttons = [];
 
-    // Always show first page
     buttons.push(1);
 
     const startPage = Math.max(2, currentPage - 1);
     const endPage = Math.min(totalPages - 1, currentPage + 1);
 
-    // Add ellipsis after first page if needed
     if (startPage > 2) {
       buttons.push('...');
     }
 
-    // Add pages around current page
     for (let i = startPage; i <= endPage; i++) {
       buttons.push(i);
     }
 
-    // Add ellipsis before last page if needed
     if (endPage < totalPages - 1) {
       buttons.push('...');
     }
 
-    // Always show last page if more than 1 page
     if (totalPages > 1) {
       buttons.push(totalPages);
     }
@@ -109,7 +102,6 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
 
   return (
     <div style={paginationStyles.container}>
-      {/* Previous button */}
       <button
         style={{
           ...paginationStyles.button,
@@ -126,7 +118,6 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
         </span>
       </button>
 
-      {/* Page numbers */}
       {pageButtons.map((button, index) => {
         if (button === '...') {
           return (
@@ -153,7 +144,6 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
         );
       })}
 
-      {/* Next button */}
       <button
         style={{
           ...paginationStyles.button,

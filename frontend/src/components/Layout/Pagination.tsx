@@ -52,15 +52,12 @@ const Pagination: React.FC<PaginationProps> = ({
     if (isMobile) {
       const buttons = [];
       
-      // Always show current page
       buttons.push(currentPage);
 
-      // Show one button before current if available
       if (currentPage > 1) {
         buttons.unshift(currentPage - 1);
       }
 
-      // Show one button after current if available
       if (currentPage < totalPages) {
         buttons.push(currentPage + 1);
       }
@@ -69,51 +66,43 @@ const Pagination: React.FC<PaginationProps> = ({
     }
 
     const buttons = [];
-    const SIBLINGS = 1; // Number of siblings to show on each side
+    const SIBLINGS = 1; 
 
-    // Always add Previous button (handled in render)
 
-    // 1. Always show first page if we have more than 1 page
     if (totalPages > 1) {
       buttons.push(1);
     }
 
-    // 2. Calculate the range of pages to show around current page
     const leftSibling = Math.max(currentPage - SIBLINGS, 1);
     const rightSibling = Math.min(currentPage + SIBLINGS, totalPages);
 
-    // 3. Determine if we need ellipses and where
     const shouldShowLeftEllipsis = leftSibling > 2;
     const shouldShowRightEllipsis = rightSibling < totalPages - 1;
 
-    // 4. Add left ellipsis if needed
     if (shouldShowLeftEllipsis) {
       buttons.push('...');
     } else {
-      // If we're not showing the left ellipsis, we can show more numbers
+     
       for (let i = 2; i < leftSibling; i++) {
         buttons.push(i);
       }
     }
 
-    // 5. Add the sibling pages and current page
     for (let i = leftSibling; i <= rightSibling; i++) {
-      if (i !== 1 && i !== totalPages) { // Don't duplicate first/last pages
+      if (i !== 1 && i !== totalPages) { 
         buttons.push(i);
       }
     }
 
-    // 6. Add right ellipsis if needed
     if (shouldShowRightEllipsis) {
       buttons.push('...');
     } else {
-      // If we're not showing the right ellipsis, we can show more numbers
+      
       for (let i = rightSibling + 1; i < totalPages; i++) {
         buttons.push(i);
       }
     }
 
-    // 7. Always show last page if we have more than 1 page and it's not already included
     if (totalPages > 1 && !buttons.includes(totalPages)) {
       buttons.push(totalPages);
     }
@@ -164,7 +153,7 @@ const Pagination: React.FC<PaginationProps> = ({
           </svg>
         </button>
 
-        {/* Page Numbers */}
+        
         {getPageButtons().map((item, index) => {
           if (item === '...') {
             return (
